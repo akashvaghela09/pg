@@ -8,6 +8,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({ origin: "*" }));
 
+const mediaRoutes = require("./src/routes/media");
+
+app.use("/media", mediaRoutes);
+
 app.get("/test", (req, res) => {
   res.status(200).json(`Server OK... ${process.pid}`);
 });

@@ -1,9 +1,9 @@
 const { Router } = require("express");
 const router = Router();
 
-const { getMediaDetails } = require("../controllers/media.controller");
+const { getTitleDetails } = require("../controllers/media.controller");
 
-router.get("/title", getMediaDetails);
+router.get("/title", getTitleDetails);
 
 module.exports = router;
 

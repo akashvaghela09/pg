@@ -2,26 +2,13 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const axios = require("axios");
 const { config } = require("../configs/config");
-const { domain } = config;
+const { domain, axiosConfig } = config;
 const fs = require("fs");
 const { cleanTitlesPG } = require("../utils/filter");
 
 const getTitleDetails = async (req, res) => {
-    // const { type = "" } = req.query;
-
-    // res.status(400).json({
-    //     message: "Invalid Match Type"
-    // });
-    // return;
-
-    const axiosConfig = {
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537',
-        }
-    };
-
     try {
-        const response = await axios.get(`https://www.imdb.com/title/tt4154796/parentalguide`, axiosConfig);
+        const response = await axios.get(`${domain}/title/tt4154796/parentalguide`, axiosConfig);
         // Create a JSDOM instance with the fetched HTML content
         const dom = new JSDOM(response.data);
         const page = dom.window.document;

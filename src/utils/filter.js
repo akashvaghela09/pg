@@ -1,9 +1,9 @@
 const cleanTitlesPG = (pgSection) => {
     let finalResponse = {};
 
-    let title = pgSection.querySelector("h4.ipl-list-title").textContent;
-    let level = pgSection.querySelector("span.ipl-status-pill").textContent;
-    let votes = pgSection.querySelector("a.advisory-severity-vote__message").textContent;
+    let title = pgSection.querySelector("h4.ipl-list-title")?.textContent;
+    let level = pgSection.querySelector("span.ipl-status-pill")?.textContent;
+    let votes = pgSection.querySelector("a.advisory-severity-vote__message")?.textContent;
 
     finalResponse.title = title;
     finalResponse.level = level;

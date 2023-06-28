@@ -8,15 +8,30 @@ const { cleanTitlesPG } = require("../utils/filter");
 const getTitleDetails = async (req, res) => {
     try {
         let returnResponse = {};
-        
+
         const response = await axios.get(`${domain}/title/tt4154796/parentalguide`, axiosConfig);
         // Create a JSDOM instance with the fetched HTML content
         const dom = new JSDOM(response.data);
         const page = dom.window.document;
-        
+
+        // Scrap certification
+        let certification = {};
+        let certiSection = page.querySelector("#mpaa-rating");
+        let certiString = certiSection.querySelectorAll("td")[1].textContent.trim();
+        certification.info = certiString;
+
+        // Use a regular expression to capture the content between "Rated" and "for"
+        let match = certiString.match(/Rated\s(.*?)\sfor/i);
+
+        // Check if there's a match and extract the captured value
+        if (match) {
+            let rating = match[1];
+            certification.rating = rating;
+        }
+
         // Parental Guide for Title without any spoilers
         let parentalGuideData = [];
-        
+
         // Scrap Nudiity Section
         let nuditySection = page.querySelector("#advisory-nudity");
         if (nuditySection) {
@@ -90,6 +105,7 @@ const getTitleDetails = async (req, res) => {
             parentalGuideSpoilersData.push(frighteningSS);
         }
 
+        returnResponse.certification = certification;
         returnResponse.parentalGuide = parentalGuideData;
         returnResponse.parentalGuideWithSpoilers = parentalGuideSpoilersData;
 

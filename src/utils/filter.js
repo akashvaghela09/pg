@@ -26,6 +26,20 @@ const cleanTitlesPG = (pgSection) => {
     return finalResponse;
 };
 
+const cleanCertificationList = (certificationListSection) => {
+    let ul = certificationListSection.querySelector(".ipl-inline-list");
+    let aTags = ul.querySelectorAll("li a");
+    let ratingsList = [];
+
+    aTags.forEach(function (a) {
+        let text = a.textContent;
+        ratingsList.push({ country: text.split(':')[0], rating: text.split(':')[1] });
+    });
+
+    return ratingsList;
+};
+
 module.exports = {
-    cleanTitlesPG
+    cleanTitlesPG,
+    cleanCertificationList
 }

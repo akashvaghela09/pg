@@ -3,7 +3,7 @@ const { JSDOM } = jsdom;
 const axios = require("axios");
 const { config } = require("../configs/config");
 const { domain, axiosConfig } = config;
-const { cleanTitlesPG } = require("../utils/filter");
+const { cleanTitlesPG, cleanCertificationList } = require("../utils/filter");
 
 const getTitleDetails = async (req, res) => {
     try {
@@ -28,6 +28,10 @@ const getTitleDetails = async (req, res) => {
             let rating = match[1];
             certification.rating = rating;
         }
+
+        let certificationListSection = page.querySelector("#certifications-list");
+        let certificationList = cleanCertificationList(certificationListSection);
+        certification.list = certificationList;
 
         // Parental Guide for Title without any spoilers
         let parentalGuideData = [];

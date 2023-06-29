@@ -55,8 +55,15 @@ const getMetaData = async (titleId) => {
             console.log('The <ul> element was not found.');
         }
 
+        const posterElement = page.querySelector('div[role="group"][data-testid="hero-media__poster"]');
+        const posterSrc = posterElement?.querySelector('img')?.srcset;
+        const posterSrcArray = posterSrc.split(' ');
+        const reversedArray = posterSrcArray.reverse();
+        const poster = reversedArray[1];
+
         returnResponse.title = title;
         returnResponse.plot = plot;
+        returnResponse.poster = poster;
         return returnResponse;
     } catch (error) {
         console.error("An error occurred:", error);

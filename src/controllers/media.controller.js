@@ -15,9 +15,48 @@ const getMetaData = async (titleId) => {
         const dom = new JSDOM(response.data);
         const page = dom.window.document;
 
-        // save this HTML file to the project directory
-        fs.writeFileSync("./test.html", page.documentElement.outerHTML);
+        const h1Element = page.querySelector('h1[data-testid="hero__pageTitle"]');
+        const title = h1Element?.textContent;
 
+        const plotSection = page.querySelector("span[data-testid='plot-xl']");
+        const plot = plotSection?.textContent;
+
+        const directorSection = page.querySelector(".ipc-metadata-list.ipc-metadata-list--dividers-all.title-pc-list.ipc-metadata-list--baseAlt");
+
+        if (directorSection) {
+            const liElements = directorSection.querySelectorAll('li.ipc-metadata-list__item');
+
+            const directors = [];
+            const writers = [];
+            const stars = [];
+
+            liElements.forEach(li => {
+                const label = li.querySelector('.ipc-metadata-list-item__label');
+                const nameLinks = li.querySelectorAll('.ipc-metadata-list-item__list-content-item');
+
+                if (label && nameLinks.length > 0) {
+                    const labelText = label.textContent.trim();
+                    const names = Array.from(nameLinks, link => link.textContent.trim());
+
+                    if (labelText === 'Director' || labelText === 'Directors') {
+                        directors.push(...names);
+                    } else if (labelText === 'Writer' || labelText === 'Writers') {
+                        writers.push(...names);
+                    } else if (labelText === 'Stars') {
+                        stars.push(...names);
+                    }
+                }
+            });
+
+            returnResponse.directors = directors;
+            returnResponse.writers = writers;
+            returnResponse.stars = stars;
+        } else {
+            console.log('The <ul> element was not found.');
+        }
+
+        returnResponse.title = title;
+        returnResponse.plot = plot;
         return returnResponse;
     } catch (error) {
         console.error("An error occurred:", error);

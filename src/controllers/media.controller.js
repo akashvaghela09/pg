@@ -5,11 +5,11 @@ const { config } = require("../configs/config");
 const { domain, axiosConfig } = config;
 const { cleanTitlesPG, cleanCertificationList } = require("../utils/filter");
 
-const getTitleDetails = async (req, res) => {
+const getParentalGuide = async (titleId) => {
     try {
         let returnResponse = {};
 
-        const response = await axios.get(`${domain}/title/tt4154796/parentalguide`, axiosConfig);
+        const response = await axios.get(`${domain}/title/${titleId}/parentalguide`, axiosConfig);
         // Create a JSDOM instance with the fetched HTML content
         const dom = new JSDOM(response.data);
         const page = dom.window.document;
@@ -113,6 +113,24 @@ const getTitleDetails = async (req, res) => {
         returnResponse.parentalGuide = parentalGuideData;
         returnResponse.parentalGuideWithSpoilers = parentalGuideSpoilersData;
 
+        return returnResponse;
+    } catch (error) {
+        console.error("An error occurred:", error);
+
+        res.status(500).json({
+            message: "An error occurred",
+            error: error
+        });
+    }
+}
+
+const getTitleDetails = async (req, res) => {
+    try {
+        const titleId = req.params.id;
+        let returnResponse = {};
+
+        let parentalGuideRes = await getParentalGuide(titleId)
+        returnResponse = { ...returnResponse, ...parentalGuideRes }
         res.json({ data: returnResponse });
         return;
     } catch (error) {

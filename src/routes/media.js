@@ -3,7 +3,7 @@ const router = Router();
 
 const { getTitleDetails } = require("../controllers/media.controller");
 
-router.get("/title", getTitleDetails);
+router.get("/title/:id", getTitleDetails);
 
 module.exports = router;
 

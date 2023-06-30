@@ -122,6 +122,7 @@ const getTitleDetails = async (req, res) => {
 
             const nameElement = element.querySelector('a[data-testid="title-cast-item__actor"]');
             const name = nameElement?.textContent;
+            const artistId = element.querySelector("a")?.href.split('/')[2];
 
             const posterSrc = element?.querySelector('img')?.srcset;
             const posterSrcArray = posterSrc.split(' ');
@@ -133,6 +134,7 @@ const getTitleDetails = async (req, res) => {
 
             item.name = name;
             item.character = character;
+            item.artistId = artistId;
             item.image = poster;
 
             cast.push(item);

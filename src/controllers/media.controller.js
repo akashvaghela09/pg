@@ -117,6 +117,41 @@ const getTitleDetails = async (req, res) => {
 
         returnResponse.cast = cast;
 
+        const moreLikeThisSection = page.querySelector('section[data-testid="MoreLikeThis"]')
+        const moreLikeThisGrid = moreLikeThisSection.querySelector('div.ipc-sub-grid.ipc-sub-grid--page-span-2.ipc-sub-grid--nowrap.ipc-shoveler__grid[data-testid="shoveler-items-container"]');
+        const childDivs = Array.from(moreLikeThisGrid.querySelectorAll('div'));
+        const moreLikeThis = [];
+
+        childDivs.forEach((element) => {
+            let item = {};
+
+            const titleElement = element.querySelector('span[data-testid="title"]');
+            const title = titleElement?.textContent.trim();
+
+            const ratingElement = element.querySelector('span.ipc-rating-star.ipc-rating-star--base.ipc-rating-star--imdb.ipc-rating-star-group--imdb');
+            const rating = ratingElement?.textContent.trim();
+            
+            const posterElement = element.querySelector('img');
+            const posterSrc = posterElement?.srcset;
+            const posterSrcArray = posterSrc?.split(' ');
+            const reversedArray = posterSrcArray?.reverse();
+            const poster =  reversedArray ? reversedArray.length > 1 ? reversedArray[1] : null : null;
+            
+            const href = element?.querySelector('a')?.href;
+            const id = href?.split('/')[2];
+
+            if (title && rating && poster) {
+                item.title = title;
+                item.rating = rating;
+                item.image = poster;
+                item.titleId = id;
+
+                moreLikeThis.push(item);
+            }
+        });
+
+        returnResponse.moreLikeThis = moreLikeThis;
+
         res.status(200).json({ data: returnResponse });
         return;
     } catch (error) {

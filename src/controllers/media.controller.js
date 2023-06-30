@@ -40,6 +40,11 @@ const getTitleDetails = async (req, res) => {
         const rating = ratingElement?.textContent;
         returnResponse.rating = rating;
 
+        const genreSection = page.querySelector('div[data-testid="genres"]');
+        const genreElements = genreSection?.querySelectorAll('span.ipc-chip__text');
+        const genres = Array.from(genreElements, element => element.textContent.trim());
+        returnResponse.genres = genres;
+
         const plotSection = page.querySelector("span[data-testid='plot-xl']");
         const plot = plotSection?.textContent;
 

@@ -18,6 +18,23 @@ const getTitleDetails = async (req, res) => {
 
         const h1Element = page.querySelector('h1[data-testid="hero__pageTitle"]');
         const title = h1Element?.textContent;
+        returnResponse.title = title;
+        
+        const subHeaderElement = h1Element?.nextElementSibling;
+        const liElements = subHeaderElement.querySelectorAll('li.ipc-inline-list__item');
+
+        if (liElements.length >= 3) {
+            // Extract the information from the <li> elements
+            const releaseDate = liElements[0].textContent.trim(); 
+            const certificate = liElements[1].textContent.trim(); 
+            const runtime = liElements[2].textContent.trim();    
+
+            returnResponse.releaseDate = releaseDate;
+            returnResponse.certificate = certificate;
+            returnResponse.runtime = runtime;
+        } else {
+            console.log('Insufficient data found in the <ul> element.');
+        }
 
         const plotSection = page.querySelector("span[data-testid='plot-xl']");
         const plot = plotSection?.textContent;
@@ -62,7 +79,6 @@ const getTitleDetails = async (req, res) => {
         const reversedArray = posterSrcArray.reverse();
         const poster = reversedArray[1];
 
-        returnResponse.title = title;
         returnResponse.plot = plot;
         returnResponse.poster = poster;
 

@@ -44,6 +44,25 @@ const getTitleDetails = async (req, res) => {
         const metaScore = metaScoreElement?.textContent.trim();
         returnResponse.metaScore = metaScore;
 
+        const reviewElement = page.querySelector('ul[data-testid="reviewContent-all-reviews"]');
+        const threeElements = reviewElement?.querySelectorAll('span.three-Elements');
+        const reviews = [];
+
+        threeElements.forEach((element) => {
+            let item = {};
+
+            let score = element.querySelector('span.score')?.textContent.trim();
+            let label = element.querySelector('span.label')?.textContent.trim();
+
+            item.count = score;
+            item.type = label;
+            
+            if(label !== "Metascore"){
+                reviews.push(item);
+            }
+        });
+        returnResponse.reviews = reviews;
+
         const genreSection = page.querySelector('div[data-testid="genres"]');
         const genreElements = genreSection?.querySelectorAll('span.ipc-chip__text');
         const genres = Array.from(genreElements, element => element.textContent.trim());

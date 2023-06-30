@@ -40,6 +40,10 @@ const getTitleDetails = async (req, res) => {
         const rating = ratingElement?.textContent;
         returnResponse.rating = rating;
 
+        const metaScoreElement = page.querySelector('span.metacritic-score-box');
+        const metaScore = metaScoreElement?.textContent.trim();
+        returnResponse.metaScore = metaScore;
+
         const genreSection = page.querySelector('div[data-testid="genres"]');
         const genreElements = genreSection?.querySelectorAll('span.ipc-chip__text');
         const genres = Array.from(genreElements, element => element.textContent.trim());
@@ -130,13 +134,13 @@ const getTitleDetails = async (req, res) => {
 
             const ratingElement = element.querySelector('span.ipc-rating-star.ipc-rating-star--base.ipc-rating-star--imdb.ipc-rating-star-group--imdb');
             const rating = ratingElement?.textContent.trim();
-            
+
             const posterElement = element.querySelector('img');
             const posterSrc = posterElement?.srcset;
             const posterSrcArray = posterSrc?.split(' ');
             const reversedArray = posterSrcArray?.reverse();
-            const poster =  reversedArray ? reversedArray.length > 1 ? reversedArray[1] : null : null;
-            
+            const poster = reversedArray ? reversedArray.length > 1 ? reversedArray[1] : null : null;
+
             const href = element?.querySelector('a')?.href;
             const id = href?.split('/')[2];
 

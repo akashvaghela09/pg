@@ -25,9 +25,9 @@ const getTitleDetails = async (req, res) => {
 
         if (liElements.length >= 3) {
             // Extract the information from the <li> elements
-            const releaseDate = liElements[0].textContent.trim(); 
-            const certificate = liElements[1].textContent.trim(); 
-            const runtime = liElements[2].textContent.trim();    
+            const releaseDate = liElements[0].textContent.trim();
+            const certificate = liElements[1].textContent.trim();
+            const runtime = liElements[2].textContent.trim();
 
             returnResponse.releaseDate = releaseDate;
             returnResponse.certificate = certificate;
@@ -47,6 +47,14 @@ const getTitleDetails = async (req, res) => {
 
         const plotSection = page.querySelector("span[data-testid='plot-xl']");
         const plot = plotSection?.textContent;
+        returnResponse.plot = plot;
+
+        const posterElement = page.querySelector('div[role="group"][data-testid="hero-media__poster"]');
+        const posterSrc = posterElement?.querySelector('img')?.srcset;
+        const posterSrcArray = posterSrc.split(' ');
+        const reversedArray = posterSrcArray.reverse();
+        const poster = reversedArray[1];
+        returnResponse.poster = poster;
 
         const directorSection = page.querySelector(".ipc-metadata-list.ipc-metadata-list--dividers-all.title-pc-list.ipc-metadata-list--baseAlt");
 
@@ -82,14 +90,32 @@ const getTitleDetails = async (req, res) => {
             console.log('The <ul> element was not found.');
         }
 
-        const posterElement = page.querySelector('div[role="group"][data-testid="hero-media__poster"]');
-        const posterSrc = posterElement?.querySelector('img')?.srcset;
-        const posterSrcArray = posterSrc.split(' ');
-        const reversedArray = posterSrcArray.reverse();
-        const poster = reversedArray[1];
+        const castSection = page.querySelector('div.ipc-sub-grid.ipc-sub-grid--page-span-2.ipc-sub-grid--wraps-at-above-l.ipc-shoveler__grid[data-testid="shoveler-items-container"]');
+        const castArray = castSection?.querySelectorAll('div[data-testid="title-cast-item"]');
+        const cast = [];
 
-        returnResponse.plot = plot;
-        returnResponse.poster = poster;
+        castArray.forEach(element => {
+            let item = {};
+
+            const nameElement = element.querySelector('a[data-testid="title-cast-item__actor"]');
+            const name = nameElement?.textContent;
+
+            const posterSrc = element?.querySelector('img')?.srcset;
+            const posterSrcArray = posterSrc.split(' ');
+            const reversedArray = posterSrcArray.reverse();
+            const poster = reversedArray[1];
+
+            const characterElement = element.querySelector('a[data-testid="cast-item-characters-link"]');
+            const character = characterElement?.textContent;
+
+            item.name = name;
+            item.character = character;
+            item.image = poster;
+
+            cast.push(item);
+        });
+
+        returnResponse.cast = cast;
 
         res.status(200).json({ data: returnResponse });
         return;

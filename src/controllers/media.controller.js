@@ -6,8 +6,9 @@ const { domain, axiosConfig } = config;
 const { cleanTitlesPG, cleanCertificationList } = require("../utils/filter");
 const fs = require("fs");
 
-const getMetaData = async (titleId) => {
+const getTitleDetails = async (req, res) => {
     try {
+        const titleId = req.params.id;
         let returnResponse = {};
 
         const response = await axios.get(`${domain}/title/${titleId}`, axiosConfig);
@@ -64,26 +65,8 @@ const getMetaData = async (titleId) => {
         returnResponse.title = title;
         returnResponse.plot = plot;
         returnResponse.poster = poster;
-        return returnResponse;
-    } catch (error) {
-        console.error("An error occurred:", error);
 
-        res.status(500).json({
-            message: "An error occurred",
-            error: error
-        });
-    }
-};
-
-const getTitleDetails = async (req, res) => {
-    try {
-        const titleId = req.params.id;
-        let returnResponse = {};
-
-        let metaDataRes = await getMetaData(titleId);
-        returnResponse = { ...returnResponse, ...metaDataRes }
-
-        res.json({ data: returnResponse });
+        res.status(200).json({ data: returnResponse });
         return;
     } catch (error) {
         console.error("An error occurred:", error);

@@ -45,10 +45,20 @@ const getTitleDetails = async (req, res) => {
             count: ratedBy,
             info: `${rating} based on ${ratedBy} user ratings`
         };
-        
+
         const metaScoreElement = page.querySelector('span.metacritic-score-box');
         const metaScore = metaScoreElement?.textContent.trim();
         returnResponse.metaScore = metaScore;
+
+        const popularityElement = page.querySelector('div[data-testid="hero-rating-bar__popularity__score"]');
+        const popularityScore = popularityElement?.textContent.trim();
+        const popularityParentElement = popularityElement?.parentElement;
+        const popularityTestId = popularityParentElement?.getAttribute('data-testid');
+        const popularityTrend = popularityTestId.split('__').pop();
+        returnResponse.popularity = {
+            score: popularityScore,
+            trend: popularityTrend
+        };
 
         const reviewElement = page.querySelector('ul[data-testid="reviewContent-all-reviews"]');
         const threeElements = reviewElement?.querySelectorAll('span.three-Elements');

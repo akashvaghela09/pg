@@ -40,9 +40,12 @@ const getTitleDetails = async (req, res) => {
         const rating = ratingElement?.textContent;
         const ratedByElement = ratingElement?.nextElementSibling.nextElementSibling;
         const ratedBy = ratedByElement?.textContent.trim();
-        returnResponse.rating = rating;
-        returnResponse.ratingInfo = `${rating} based on ${ratedBy} user ratings`;
-
+        returnResponse.rating = {
+            score: rating,
+            count: ratedBy,
+            info: `${rating} based on ${ratedBy} user ratings`
+        };
+        
         const metaScoreElement = page.querySelector('span.metacritic-score-box');
         const metaScore = metaScoreElement?.textContent.trim();
         returnResponse.metaScore = metaScore;

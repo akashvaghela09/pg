@@ -38,7 +38,10 @@ const getTitleDetails = async (req, res) => {
 
         const ratingElement = page.querySelector('div[data-testid="hero-rating-bar__aggregate-rating__score"]');
         const rating = ratingElement?.textContent;
+        const ratedByElement = ratingElement?.nextElementSibling.nextElementSibling;
+        const ratedBy = ratedByElement?.textContent.trim();
         returnResponse.rating = rating;
+        returnResponse.ratingInfo = `${rating} based on ${ratedBy} user ratings`;
 
         const metaScoreElement = page.querySelector('span.metacritic-score-box');
         const metaScore = metaScoreElement?.textContent.trim();

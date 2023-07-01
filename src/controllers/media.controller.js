@@ -138,10 +138,15 @@ const getTitleDetails = async (req, res) => {
 
             const nameElement = element.querySelector('a[data-testid="title-cast-item__actor"]');
             const name = nameElement?.textContent;
-            const artistId = element.querySelector("a")?.href.split('/')[2];
             item.name = name;
-            item.artistId = artistId;
 
+            const characterElement = element.querySelector('a[data-testid="cast-item-characters-link"]');
+            const character = characterElement?.textContent;
+            item.character = character;
+            
+            const artistId = element.querySelector("a")?.href.split('/')[2];
+            item.artistId = artistId;
+            
             const posterSrc = element?.querySelector('img')?.srcset;
             if(posterSrc){
                 const posterSrcArray = posterSrc.split(' ');
@@ -149,10 +154,6 @@ const getTitleDetails = async (req, res) => {
                 const poster = reversedArray[1];
                 item.image = poster;
             }
-
-            const characterElement = element.querySelector('a[data-testid="cast-item-characters-link"]');
-            const character = characterElement?.textContent;
-            item.character = character;
 
             cast.push(item);
         });

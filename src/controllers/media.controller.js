@@ -19,7 +19,7 @@ const getTitleDetails = async (req, res) => {
         const h1Element = page.querySelector('h1[data-testid="hero__pageTitle"]');
         const title = h1Element?.textContent;
         returnResponse.title = title;
-        
+
         const subHeaderElement = h1Element?.nextElementSibling;
         const liElements = subHeaderElement.querySelectorAll('li.ipc-inline-list__item');
 
@@ -35,6 +35,10 @@ const getTitleDetails = async (req, res) => {
         } else {
             console.log('Insufficient data found in the <ul> element.');
         }
+
+        const ratingElement = page.querySelector('div[data-testid="hero-rating-bar__aggregate-rating__score"]');
+        const rating = ratingElement?.textContent;
+        returnResponse.rating = rating;
 
         const plotSection = page.querySelector("span[data-testid='plot-xl']");
         const plot = plotSection?.textContent;
